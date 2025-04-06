@@ -13,13 +13,13 @@ YTUB_COOKIES = """
 # write here yt cookies
 """
 
-API_ID = int(getenv("API_ID", "27637482"))
-API_HASH = getenv("API_HASH", "176348d88118523f5b898fd15e416694")
+API_ID = int(getenv("API_ID", "26468828"))
+API_HASH = getenv("API_HASH", "4693513c08d1ac6af15f95b116c29478")
 BOT_TOKEN = getenv("BOT_TOKEN", "")
 OWNER_ID = list(map(int, getenv("OWNER_ID", "7517045929").split()))
 MONGO_DB = getenv("MONGO_DB", "mongodb+srv://chiruedizz:WmzSiQlS35fLDImn@cluster0.4o4zl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-LOG_GROUP = getenv("LOG_GROUP", "-1002468082777")
-CHANNEL_ID = int(getenv("CHANNEL_ID", "-1002487744426"))
+LOG_GROUP = getenv("LOG_GROUP", "-1002360141044")
+CHANNEL_ID = int(getenv("CHANNEL_ID", "-1002260651771"))
 FREEMIUM_LIMIT = int(getenv("FREEMIUM_LIMIT", "5"))
 PREMIUM_LIMIT = int(getenv("PREMIUM_LIMIT", "5000"))
 WEBSITE_URL = getenv("WEBSITE_URL", "modijiurl.com")
