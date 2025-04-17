@@ -73,7 +73,9 @@ async def token_handler(client, message):
     msg = await app.get_messages(chat_id, 796)
     user_id = message.chat.id
     if len(message.command) <= 1:
-        image_url = "https://tinypic.host/image/Screenshot-2025-03-19-06-40-21-30.3gKoOw"
+        image_url = [
+         "https://tinypic.host/image/Screenshot-2025-03-19-06-40-21-30.3gKoOw"
+        ]
         join_button = InlineKeyboardButton("🅹🅾🅸🅽 🅲🅷🅰🅽🅽🅴🅻", url="https://t.me/skillwithchiru")
         premium = InlineKeyboardButton("🅿🆁🅴🅼🅸🆄🅼", url="https://t.me/chiru52")   
         keyboard = InlineKeyboardMarkup([
@@ -82,11 +84,12 @@ async def token_handler(client, message):
         ])
          
         await message.reply_photo(
-            msg.photo.file_id,
+            image_url,
             caption=(
-                "Hi 👋 Welcome, Wanna intro...?\n\n"
-                "✳️ I can save posts from channels or groups where forwarding is off. I can download videos/audio from YT, INSTA, ... social platforms\n"
-                "✳️ Simply send the post link of a public channel. For private channels, do /login. Send /help to know more."
+                "Hi 👋 Welcome To Beast SRC Bot\n"
+                "✳️ Using This Bot U Can Forword Restricted channel messages\n"
+                "✳️ No Login Required For Public Channel Simply Send Url\n"
+                "✳️ Login Required For Private Channel /login \n"
             ),
             reply_markup=keyboard
         )
