@@ -75,14 +75,13 @@ async def token_handler(client, message):
     if len(message.command) <= 1:
         image_url = "https://tinypic.host/image/Ratan-Tata-Sir.3uJtPm"
         join_button = InlineKeyboardButton("Join Channel", url="https://t.me/skillwithchiru")
-        premium = InlineKeyboardButton("Premium", url="https://t.me/chiru52")   
+        #premium = InlineKeyboardButton("Premium", url="https://t.me/chiru52")   
         keyboard = InlineKeyboardMarkup([
-            [join_button],   
-            [premium]    
+            [join_button] 
         ])
          
         await message.reply_photo(
-            msg.photo.file_id,
+            photo=image_url,
             caption=(
                 "Hi 👋 Welcome, Wanna intro...?\n\n"
                 "✳️ I can save posts from channels or groups where forwarding is off. I can download videos/audio from YT, INSTA, ... social platforms\n"
