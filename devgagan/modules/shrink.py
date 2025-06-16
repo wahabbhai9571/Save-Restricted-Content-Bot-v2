@@ -23,7 +23,7 @@ from devgagan import app
 from devgagan.core.func import *
 from datetime import datetime, timedelta
 from motor.motor_asyncio import AsyncIOMotorClient
-from config import MONGO_DB, WEBSITE_URL, AD_API, LOG_GROUP  
+from config import MONGO_DB, WEBSITE_URL, AD_API, LOG_GROUP , Contact 
  
  
 tclient = AsyncIOMotorClient(MONGO_DB)
@@ -74,10 +74,10 @@ async def token_handler(client, message):
     user_id = message.chat.id
     if len(message.command) <= 1:
         image_url = "https://tinypic.host/image/Ratan-Tata-Sir.3uJtPm"
-        join_button = InlineKeyboardButton("Join Channel", url="https://t.me/skillwithchiru")
-        #premium = InlineKeyboardButton("Premium", url="https://t.me/chiru52")   
+        #join_button = InlineKeyboardButton("Join Channel", url="https://t.me/skillwithchiru")
+        premium = InlineKeyboardButton("premium", url="{Contact}")   
         keyboard = InlineKeyboardMarkup([
-            [join_button] 
+            [premium] 
         ])
          
         await message.reply_photo(
