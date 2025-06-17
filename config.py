@@ -12,7 +12,7 @@ INST_COOKIES = """
 YTUB_COOKIES = """
 # write here yt cookies
 """
-Contact = getenv("Contact", "")
+#Contact = getenv("Contact", "")
 API_ID = int(getenv("API_ID", "26468828"))
 API_HASH = getenv("API_HASH", "4693513c08d1ac6af15f95b116c29478")
 BOT_TOKEN = getenv("BOT_TOKEN", "")
