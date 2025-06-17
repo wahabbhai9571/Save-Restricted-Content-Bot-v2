@@ -23,7 +23,7 @@ from devgagan import app
 from devgagan.core.func import *
 from datetime import datetime, timedelta
 from motor.motor_asyncio import AsyncIOMotorClient
-from config import MONGO_DB, WEBSITE_URL, AD_API, LOG_GROUP , Contact 
+from config import MONGO_DB, WEBSITE_URL, AD_API, LOG_GROUP
  
  
 tclient = AsyncIOMotorClient(MONGO_DB)
