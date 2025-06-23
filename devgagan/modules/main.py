@@ -19,7 +19,7 @@ import string
 import asyncio
 from pyrogram import filters, Client
 from devgagan import app, userrbot
-from config import API_ID, API_HASH, FREEMIUM_LIMIT, PREMIUM_LIMIT, OWNER_ID, DEFAULT_SESSION
+from config import API_ID, API_HASH, FREEMIUM_LIMIT, PREMIUM_LIMIT, OWNER_ID, DEFAULT_SESSION, Credit, c_url
 from devgagan.core.get_func import get_msg
 from devgagan.core.func import *
 from devgagan.core.mongo import db
@@ -233,11 +233,11 @@ async def batch_link(_, message):
         await message.reply(response_message)
         return
         
-    join_button = InlineKeyboardButton("Join Channel", url="https://t.me/skillwithchiru")
+    join_button = InlineKeyboardButton("Join Channel", url=f"{c_url}")
     keyboard = InlineKeyboardMarkup([[join_button]])
     pin_msg = await app.send_message(
         user_id,
-        f"Batch process started ⚡\nProcessing: 0/{cl}\n\n**__Powered by 🅱🅴🅰🆂🆃__**",
+        f"Batch process started ⚡\nProcessing: 0/{cl}\n\n**__Powered by {Credit}**",
         reply_markup=keyboard
     )
     await pin_msg.pin(both_sides=True)
@@ -259,14 +259,14 @@ async def batch_link(_, message):
                     msg = await app.send_message(message.chat.id, f"Processing...")
                     await process_and_upload_link(userbot, user_id, msg.id, link, 0, message)
                     await pin_msg.edit_text(
-                        f"Batch process started ⚡\nProcessing: {i - cs + 1}/{cl}\n\n**__Powered by 🅱🅴🅰🆂🆃__**",
+                        f"Batch process started ⚡\nProcessing: {i - cs + 1}/{cl}\n\n**__Powered by {Credit}",
                         reply_markup=keyboard
                     )
                     normal_links_handled = True
         if normal_links_handled:
             await set_interval(user_id, interval_minutes=300)
             await pin_msg.edit_text(
-                f"Batch completed successfully for {cl} messages 🎉\n\n**__Powered by 🅱🅴🅰🆂🆃__**",
+                f"Batch completed successfully for {cl} messages 🎉\n\n**__Powered by {Credit}**",
                 reply_markup=keyboard
             )
             await app.send_message(message.chat.id, "Batch completed successfully! 🎉")
@@ -287,13 +287,13 @@ async def batch_link(_, message):
                     msg = await app.send_message(message.chat.id, f"Processing...")
                     await process_and_upload_link(userbot, user_id, msg.id, link, 0, message)
                     await pin_msg.edit_text(
-                        f"Batch process started ⚡\nProcessing: {i - cs + 1}/{cl}\n\n**__Powered by 🅱🅴🅰🆂🆃__**",
+                        f"Batch process started ⚡\nProcessing: {i - cs + 1}/{cl}\n\n**__Powered by {Credit}**",
                         reply_markup=keyboard
                     )
 
         await set_interval(user_id, interval_minutes=300)
         await pin_msg.edit_text(
-            f"Batch completed successfully for {cl} messages 🎉\n\n**__Powered by 🅱🅴🅰🆂🆃__**",
+            f"Batch completed successfully for {cl} messages 🎉\n\n**__Powered by {Credit}**",
             reply_markup=keyboard
         )
         await app.send_message(message.chat.id, "Batch completed successfully! 🎉")
