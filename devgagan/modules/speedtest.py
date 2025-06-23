@@ -11,7 +11,7 @@
 # Version: 2.0.5
 # License: MIT License
 # ---------------------------------------------------
-
+from config import Credit
 from time import time
 from speedtest import Speedtest
 import math
@@ -85,7 +85,7 @@ async def speedtest(event):
 ├ <b>Country:</b> <code>{result['client']['country']}</code>
 ├ <b>ISP:</b> <code>{result['client']['isp']}</code>
 ├ <b>ISP Rating:</b> <code>{result['client']['isprating']}</code>
-╰ <b>Powered by 🅱🅴🅰🆂🆃</b> 
+╰ <b>Powered by {Credit}</b> 
 '''
     try:
         await event.reply(string_speed,file=path,parse_mode='html')
