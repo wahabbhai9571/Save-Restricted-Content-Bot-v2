@@ -458,7 +458,7 @@ async def split_and_upload_file(app, sender, file_path, caption):
             part_caption = f"{caption} \n\n**Part : {part_number + 1}**"
             await app.send_document(sender, document=part_file, caption=part_caption,
                 progress=progress_bar,
-                progress_args=("╭─────────────────────╮\n│      **__{Credit} Uploader__**\n├─────────────────────", edit, time.time())
+                progress_args=(f"╭─────────────────────╮\n│      **__{Credit} Uploader__**\n├─────────────────────", edit, time.time())
             )
             await edit.delete()
             os.remove(part_file)  # Cleanup after upload
