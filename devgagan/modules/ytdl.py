@@ -38,7 +38,7 @@ import logging
 import aiofiles
 from mutagen.id3 import ID3, TIT2, TPE1, COMM, APIC
 from mutagen.mp3 import MP3
- 
+from config import Credit
 logger = logging.getLogger(__name__)
  
  
@@ -90,7 +90,7 @@ async def process_audio(client, event, url, cookies_env_var=None):
             temp_cookie_path = temp_cookie_file.name
  
     start_time = time.time()
-    random_filename = f"@chiru52 {event.sender_id}"
+    random_filename = f" {event.sender_id}"
     download_path = f"{random_filename}.mp3"
  
     ydl_opts = {
@@ -143,14 +143,14 @@ async def process_audio(client, event, url, cookies_env_var=None):
         chat_id = event.chat_id
         if os.path.exists(download_path):
             await progress_message.delete()
-            prog = await client.send_message(chat_id, "**__Starting Upload by 🅱🅴🅰🆂🆃...__**")
+            prog = await client.send_message(chat_id, "**__Starting Upload by {Credit}...__**")
             uploaded = await fast_upload(
                 client, download_path, 
                 reply=prog, 
                 name=None,
                 progress_bar_function=lambda done, total: progress_callback(done, total, chat_id)
             )
-            await client.send_file(chat_id, uploaded, caption=f"**{title}**\n\n**__Powered by 🅱🅴🅰🆂🆃__**")
+            await client.send_file(chat_id, uploaded, caption=f"**{title}**\n\n**__Powered by {Credit}__**")
             if prog:
                 await prog.delete()
         else:
@@ -296,7 +296,7 @@ def progress_callback(done, total, user_id):
      
     final = (
         f"╭──────────────────╮\n"
-        f"│        **__Uploading by 🅱🅴🅰🆂🆃...__**       \n"
+        f"│        **__Uploading by {Credit}...__**       \n"
         f"├──────────\n"
         f"│ {progress_bar}\n\n"
         f"│ **__Progress:__** {percent:.2f}%\n"
@@ -304,7 +304,7 @@ def progress_callback(done, total, user_id):
         f"│ **__Speed:__** {speed_mbps:.2f} Mbps\n"
         f"│ **__Time Remaining:__** {remaining_time_min:.2f} min\n"
         f"╰──────────────────╯\n\n"
-        f"**__Powered by 🅱🅴🅰🆂🆃__**"
+        f"**__Powered by {Credit}__**"
     )
  
      
@@ -386,13 +386,13 @@ async def process_video(client, event, url, cookies_env_var, check_duration_and_
         caption = f"{title}"
      
         if os.path.exists(download_path) and os.path.getsize(download_path) > SIZE:
-            prog = await client.send_message(chat_id, "**__Started Uploading by 🅱🅴🅰🆂🆃...__**")
+            prog = await client.send_message(chat_id, "**__Started Uploading by {Credit}...__**")
             await split_and_upload_file(app, chat_id, download_path, caption)
             await prog.delete()
          
         if os.path.exists(download_path):
             await progress_message.delete()
-            prog = await client.send_message(chat_id, "**__Started Uploading by 🅱🅴🅰🆂🆃...__**")
+            prog = await client.send_message(chat_id, "**__Started Uploading by {Credit}...__**")
             uploaded = await fast_upload(
                 client, download_path,
                 reply=prog,
@@ -458,7 +458,7 @@ async def split_and_upload_file(app, sender, file_path, caption):
             part_caption = f"{caption} \n\n**Part : {part_number + 1}**"
             await app.send_document(sender, document=part_file, caption=part_caption,
                 progress=progress_bar,
-                progress_args=("╭─────────────────────╮\n│      **__🅱🅴🅰🆂🆃 Uploader__**\n├─────────────────────", edit, time.time())
+                progress_args=("╭─────────────────────╮\n│      **__{Credit} Uploader__**\n├─────────────────────", edit, time.time())
             )
             await edit.delete()
             os.remove(part_file)  # Cleanup after upload
