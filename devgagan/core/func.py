@@ -11,7 +11,7 @@
 # Version: 2.0.5
 # License: MIT License
 # ---------------------------------------------------
-
+from config import Credit
 import math
 import time , re
 from pyrogram import enums
@@ -244,13 +244,13 @@ async def progress_callback(current, total, progress_message):
         total_mb = total / (1024 * 1024)      
         await progress_message.edit(
     f"╭──────────────────╮\n"
-    f"│        **__Uploading by **__🅱🅴🅰🆂🆃__**...__**       \n"
+    f"│        **__Uploading by **__{Credit}__**...__**       \n"
     f"├──────────\n"
     f"│ {progress_bar}\n\n"
     f"│ **__Progress:__** {percent:.2f}%\n"
     f"│ **__Uploaded:__** {current_mb:.2f} MB / {total_mb:.2f} MB\n"
     f"╰──────────────────╯\n\n"
-    f"**__Powered by **__🅱🅴🅰🆂🆃__** __**"
+    f"**__Powered by **__{Credit}__** __**"
         )
 
         last_update_time = current_time
