@@ -14,7 +14,7 @@
 
 from pyrogram import filters
 from devgagan import app
-from config import OWNER_ID
+from config import OWNER_ID, Credit
 from devgagan.core.func import subscribe
 import asyncio
 from devgagan.core.func import *
@@ -109,7 +109,7 @@ help_pages = [
         "> 4. REPLACEWORDS : Can be used for words in deleted set via REMOVE WORDS\n"
         "> 5. RESET : To set the things back to default\n\n"
         "> You can set CUSTOM THUMBNAIL, PDF WATERMARK, VIDEO WATERMARK, SESSION-based login, etc. from settings\n\n"
-        "**__Powered by 🅱🅴🅰🆂🆃__**"
+        "**__Powered by {Credit}__**"
     )
 ]
  
