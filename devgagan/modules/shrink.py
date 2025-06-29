@@ -113,11 +113,12 @@ async def token_handler(client, message):
                 "created_at": datetime.utcnow(),
                 "expires_at": datetime.utcnow() + timedelta(hours=3),
             })"""
+            await message.reply("✅ You have been verified successfully")
             time_zone = datetime.datetime.now(pytz.timezone("Asia/Kolkata"))
             current_time = time_zone.strftime("%d-%m-%Y\n⏱️ ᴊᴏɪɴɪɴɢ ᴛɪᴍᴇ : %I:%M:%S %p") 
-            user_id = message.chat.id
+            #user_id = message.chat.id
             time = "3 hour"
-            seconds = await get_seconds(time) 
+            seconds = 3*60*60 #await get_seconds(time) 
             if seconds > 0:
               expiry_time = datetime.datetime.now() + datetime.timedelta(seconds=seconds)  
               await plans_db.add_premium(user_id, expiry_time)  
@@ -130,8 +131,7 @@ async def token_handler(client, message):
                 text=f"👋 ʜᴇʏ {user.mention},\nᴛʜᴀɴᴋ ʏᴏᴜ ꜰᴏʀ ᴡᴀᴛᴄʜɪɴɢ ᴀᴅꜱ.\nᴇɴᴊᴏʏ !! ✨🎉\n\n⏰ ᴘʀᴇᴍɪᴜᴍ ᴀᴄᴄᴇꜱꜱ : <code>{time}</code>\n⏳ ᴊᴏɪɴɪɴɢ ᴅᴀᴛᴇ : {current_time}\n\n⌛️ ᴇxᴘɪʀʏ ᴅᴀᴛᴇ : {expiry_str_in_ist}\n\n__**Powered by {Credit}__**", disable_web_page_preview=True              
               )
           
-            del Param[user_id]   
-            #await message.reply("✅ You have been verified successfully! Enjoy your session for next 3 hours.")
+            del Param[user_id]
             return
         else:
             await message.reply("❌ Invalid or expired verification link. Please generate a new token.")
