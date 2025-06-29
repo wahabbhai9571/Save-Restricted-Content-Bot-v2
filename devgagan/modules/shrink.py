@@ -29,7 +29,7 @@ from devgagan import app
 from devgagan.core.func import *
 from datetime import datetime, timedelta
 from motor.motor_asyncio import AsyncIOMotorClient
-from config import MONGO_DB, WEBSITE_URL, AD_API, LOG_GROUP, Credit , c_url, OWNER_ID
+from config import MONGO_DB, WEBSITE_URL, AD_API, LOG_GROUP, Credit , c_url, OWNER_ID, img_url
  
  
 tclient = AsyncIOMotorClient(MONGO_DB)
@@ -87,11 +87,11 @@ async def token_handler(client, message):
         ])
          
         await message.reply_photo(
-            photo=image_url,
+            photo=img_url,
             caption=(
-                "Hi 👋 Welcome, Wanna intro...?\n\n"
-                "✳️ I can save posts from channels or groups where forwarding is off. I can download videos/audio from YT, INSTA, ... social platforms\n"
-                "✳️ Simply send the post link of a public channel. For private channels, do /login. Send /help to know more."
+                "Hi 👋 Welcome To Team JNC SRC Bot\n\n"
+                "✳️ I am Save Restricted Robot 🤖 \n"
+                "<blockquote><b>/help --> Know Commod Details\n /token --> Get 3 Hours Free Premium Features\n /myplan to check Your Plan</b></blockquote>"
             ),
             reply_markup=keyboard
         )
@@ -100,7 +100,7 @@ async def token_handler(client, message):
     param = message.command[1] if len(message.command) > 1 else None
     freecheck = await chk_user(message, user_id)
     if freecheck != 1:
-        await message.reply("You are a premium user no need of token 😉")
+        await message.reply("<blockquote>You are a premium user no need of token 😉</blockquote>")
         return
  
      
@@ -113,7 +113,7 @@ async def token_handler(client, message):
                 "created_at": datetime.utcnow(),
                 "expires_at": datetime.utcnow() + timedelta(hours=3),
             })"""
-            await message.reply("✅ You have been verified successfully")
+            await message.reply("<blockquote>✅ You have been verified successfully</blockquote>")
             user_id = int(user_id)
             user = await client.get_users(user_id)
             time_zone = datetime.now(pytz.timezone("Asia/Kolkata"))
@@ -127,10 +127,13 @@ async def token_handler(client, message):
               data = await plans_db.check_premium(user_id)
               expiry = data.get("expire_date")   
               expiry_str_in_ist = expiry.astimezone(pytz.timezone("Asia/Kolkata")).strftime("%d-%m-%Y\n⏱️ ᴇxᴘɪʀʏ ᴛɪᴍᴇ : %I:%M:%S %p")         
-              await message.reply_text(f"ᴘʀᴇᴍɪᴜᴍ ᴀᴅᴅᴇᴅ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ✅\n\n👤 ᴜꜱᴇʀ : {user.mention}\n⚡ ᴜꜱᴇʀ ɪᴅ : <code>{user_id}</code>\n⏰ ᴘʀᴇᴍɪᴜᴍ ᴀᴄᴄᴇꜱꜱ : <code>{time}</code>\n\n⏳ ᴊᴏɪɴɪɴɢ ᴅᴀᴛᴇ : {current_time}\n\n⌛️ ᴇxᴘɪʀʏ ᴅᴀᴛᴇ : {expiry_str_in_ist} \n\n__**Powered by {Credit}__**", disable_web_page_preview=True)
+              await client.send_message(
+                 chat_id = OWNER_ID, 
+                 text=f"ᴘʀᴇᴍɪᴜᴍ ᴀᴅᴅᴇᴅ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ✅\n\n👤 ᴜꜱᴇʀ : {user.mention}\n⚡ ᴜꜱᴇʀ ɪᴅ : <code>{user_id}</code>\n⏰ ᴘʀᴇᴍɪᴜᴍ ᴀᴄᴄᴇꜱꜱ : <code>{time}</code>\n\n⏳ ᴊᴏɪɴɪɴɢ ᴅᴀᴛᴇ : {current_time}\n\n⌛️ ᴇxᴘɪʀʏ ᴅᴀᴛᴇ : {expiry_str_in_ist} \n\n<blockquote>__**Powered by {Credit}__**</blockquote>", disable_web_page_preview=True
+              )
               await client.send_message(
                 chat_id=user_id,
-                text=f"👋 ʜᴇʏ {user.mention},\nᴛʜᴀɴᴋ ʏᴏᴜ ꜰᴏʀ ᴡᴀᴛᴄʜɪɴɢ ᴀᴅꜱ.\nᴇɴᴊᴏʏ !! ✨🎉\n\n⏰ ᴘʀᴇᴍɪᴜᴍ ᴀᴄᴄᴇꜱꜱ : <code>{time}</code>\n⏳ ᴊᴏɪɴɪɴɢ ᴅᴀᴛᴇ : {current_time}\n\n⌛️ ᴇxᴘɪʀʏ ᴅᴀᴛᴇ : {expiry_str_in_ist}\n\n__**Powered by {Credit}__**", disable_web_page_preview=True              
+                text=f"👋 ʜᴇʏ {user.mention},\nᴛʜᴀɴᴋ ʏᴏᴜ ꜰᴏʀ ᴡᴀᴛᴄʜɪɴɢ ᴀᴅꜱ.\nᴇɴᴊᴏʏ !! ✨🎉\n\n⏰ ᴘʀᴇᴍɪᴜᴍ ᴀᴄᴄᴇꜱꜱ : <code>{time}</code>\n⏳ ᴊᴏɪɴɪɴɢ ᴅᴀᴛᴇ : {current_time}\n\n⌛️ ᴇxᴘɪʀʏ ᴅᴀᴛᴇ : {expiry_str_in_ist}\n\n<blockquote>__**Powered by {Credit}__**</blockquote>", disable_web_page_preview=True              
               )
           
             del Param[user_id]
@@ -148,7 +151,7 @@ async def smart_handler(client, message):
         await message.reply("You are a premium user no need of token 😉")
         return
     if await is_user_verified(user_id):
-        await message.reply("✅ Your free session is already active enjoy!")
+        await message.reply("<blockquote>✅ Your free session is already active enjoy!</blockquote>")
     else:
          
         param = await generate_random_param()
@@ -160,12 +163,12 @@ async def smart_handler(client, message):
          
         shortened_url = await get_shortened_url(deep_link)
         if not shortened_url:
-            await message.reply("❌ Failed to generate the token link. Please try again.")
+            await message.reply("<blockquote>❌ Failed to generate the token link. Please try again.</blockquote>")
             return
  
          
         button = InlineKeyboardMarkup(
             [[InlineKeyboardButton("Verify the token now...", url=shortened_url)]]
         )
-        await message.reply("Click the button below to verify your free access token: \n\n> What will you get ? \n1. No time bound upto 3 hours \n2. Batch command limit will be FreeLimit + 20 \n3. All functions unlocked", reply_markup=button)
+        await message.reply("<blockquote>Click the button below to verify your free access token: \n\n> What will you get ? \n1. No time bound upto 3 hours \n2. Batch command limit will be FreeLimit + 20 \n3. All functions unlocked</blockquote>", reply_markup=button)
  
