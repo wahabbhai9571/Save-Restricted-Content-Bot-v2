@@ -19,11 +19,17 @@ import random
 import requests
 import string
 import aiohttp
+import asyncio
+#from devgagan.core.func import get_seconds
+from devgagan.core.mongo import plans_db  
+from pyrogram import filters 
+import pytz
+import datetime, time
 from devgagan import app
 from devgagan.core.func import *
 from datetime import datetime, timedelta
 from motor.motor_asyncio import AsyncIOMotorClient
-from config import MONGO_DB, WEBSITE_URL, AD_API, LOG_GROUP, Credit , c_url 
+from config import MONGO_DB, WEBSITE_URL, AD_API, LOG_GROUP, Credit , c_url, OWNER_ID
  
  
 tclient = AsyncIOMotorClient(MONGO_DB)
@@ -101,14 +107,31 @@ async def token_handler(client, message):
     if param:
         if user_id in Param and Param[user_id] == param:
              
-            await token.insert_one({
+            """await token.insert_one({
                 "user_id": user_id,
                 "param": param,
                 "created_at": datetime.utcnow(),
                 "expires_at": datetime.utcnow() + timedelta(hours=3),
-            })
+            })"""
+            time_zone = datetime.datetime.now(pytz.timezone("Asia/Kolkata"))
+            current_time = time_zone.strftime("%d-%m-%Y\n⏱️ ᴊᴏɪɴɪɴɢ ᴛɪᴍᴇ : %I:%M:%S %p") 
+            user_id = message.chat.id
+            time = "3 hour"
+            seconds = await get_seconds(time) 
+            if seconds > 0:
+              expiry_time = datetime.datetime.now() + datetime.timedelta(seconds=seconds)  
+              await plans_db.add_premium(user_id, expiry_time)  
+              data = await plans_db.check_premium(user_id)
+              expiry = data.get("expire_date")   
+              expiry_str_in_ist = expiry.astimezone(pytz.timezone("Asia/Kolkata")).strftime("%d-%m-%Y\n⏱️ ᴇxᴘɪʀʏ ᴛɪᴍᴇ : %I:%M:%S %p")         
+              await message.reply_text(f"ᴘʀᴇᴍɪᴜᴍ ᴀᴅᴅᴇᴅ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ✅\n\n👤 ᴜꜱᴇʀ : {user.mention}\n⚡ ᴜꜱᴇʀ ɪᴅ : <code>{user_id}</code>\n⏰ ᴘʀᴇᴍɪᴜᴍ ᴀᴄᴄᴇꜱꜱ : <code>{time}</code>\n\n⏳ ᴊᴏɪɴɪɴɢ ᴅᴀᴛᴇ : {current_time}\n\n⌛️ ᴇxᴘɪʀʏ ᴅᴀᴛᴇ : {expiry_str_in_ist} \n\n__**Powered by {Credit}__**", disable_web_page_preview=True)
+              await client.send_message(
+                chat_id=user_id,
+                text=f"👋 ʜᴇʏ {user.mention},\nᴛʜᴀɴᴋ ʏᴏᴜ ꜰᴏʀ ᴡᴀᴛᴄʜɪɴɢ ᴀᴅꜱ.\nᴇɴᴊᴏʏ !! ✨🎉\n\n⏰ ᴘʀᴇᴍɪᴜᴍ ᴀᴄᴄᴇꜱꜱ : <code>{time}</code>\n⏳ ᴊᴏɪɴɪɴɢ ᴅᴀᴛᴇ : {current_time}\n\n⌛️ ᴇxᴘɪʀʏ ᴅᴀᴛᴇ : {expiry_str_in_ist}\n\n__**Powered by {Credit}__**", disable_web_page_preview=True              
+              )
+          
             del Param[user_id]   
-            await message.reply("✅ You have been verified successfully! Enjoy your session for next 3 hours.")
+            #await message.reply("✅ You have been verified successfully! Enjoy your session for next 3 hours.")
             return
         else:
             await message.reply("❌ Invalid or expired verification link. Please generate a new token.")
