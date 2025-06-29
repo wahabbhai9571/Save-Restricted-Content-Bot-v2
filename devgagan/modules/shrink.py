@@ -114,13 +114,13 @@ async def token_handler(client, message):
                 "expires_at": datetime.utcnow() + timedelta(hours=3),
             })"""
             await message.reply("✅ You have been verified successfully")
-            time_zone = datetime.datetime.now(pytz.timezone("Asia/Kolkata"))
+            time_zone = datetime.now(pytz.timezone("Asia/Kolkata"))
             current_time = time_zone.strftime("%d-%m-%Y\n⏱️ ᴊᴏɪɴɪɴɢ ᴛɪᴍᴇ : %I:%M:%S %p") 
             #user_id = message.chat.id
             time = "3 hour"
             seconds = 3*60*60 #await get_seconds(time) 
             if seconds > 0:
-              expiry_time = datetime.datetime.now() + datetime.timedelta(seconds=seconds)  
+              expiry_time = datetime.now() + datetime.timedelta(seconds=seconds)  
               await plans_db.add_premium(user_id, expiry_time)  
               data = await plans_db.check_premium(user_id)
               expiry = data.get("expire_date")   
