@@ -120,7 +120,7 @@ async def token_handler(client, message):
             time = "3 hour"
             seconds = 3*60*60 #await get_seconds(time) 
             if seconds > 0:
-              expiry_time = datetime.now() + datetime.timedelta(seconds=seconds)  
+              expiry_time = datetime.now() + timedelta(seconds=seconds)  
               await plans_db.add_premium(user_id, expiry_time)  
               data = await plans_db.check_premium(user_id)
               expiry = data.get("expire_date")   
