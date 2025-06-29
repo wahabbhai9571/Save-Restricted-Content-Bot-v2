@@ -114,6 +114,8 @@ async def token_handler(client, message):
                 "expires_at": datetime.utcnow() + timedelta(hours=3),
             })"""
             await message.reply("✅ You have been verified successfully")
+            user_id = int(user_id)
+            user = await client.get_users(user_id)
             time_zone = datetime.now(pytz.timezone("Asia/Kolkata"))
             current_time = time_zone.strftime("%d-%m-%Y\n⏱️ ᴊᴏɪɴɪɴɢ ᴛɪᴍᴇ : %I:%M:%S %p") 
             #user_id = message.chat.id
