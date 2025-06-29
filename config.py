@@ -12,6 +12,7 @@ INST_COOKIES = """
 YTUB_COOKIES = """
 # write here yt cookies
 """
+img_url = getenv("img_url","https://files.catbox.moe/s6jyou.jpg")
 Credit = getenv("Credit","Team JNC")
 c_url = getenv("c_url","https://t.me/jnc_devoloper")
 API_ID = int(getenv("API_ID", "26468828"))
