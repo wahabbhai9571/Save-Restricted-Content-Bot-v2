@@ -177,12 +177,9 @@ async def batch_link(_, message):
 
     user_id = message.chat.id
 
-    # Check if a batch process is already running
+    # Prevent multiple batch processes
     if users_loop.get(user_id, False):
-        await app.send_message(
-            message.chat.id,
-            ">You already have a batch process running. Please wait for it to complete."
-        )
+        await app.send_message(user_id, "You already have a batch process running. Please wait.")
         return
 
     freecheck = await chk_user(message, user_id)
@@ -192,58 +189,56 @@ async def batch_link(_, message):
 
     max_batch_size = FREEMIUM_LIMIT if freecheck == 1 else PREMIUM_LIMIT
 
-    # Start link input
-    for attempt in range(3):
-        start = await app.ask(message.chat.id, "Please send the start link.\n\n> Maximum tries 3")
+    # Ask for start link
+    for _ in range(3):
+        start = await app.ask(user_id, "Please send the start link.\n\n> Maximum tries: 3")
         start_id = start.text.strip()
         s = start_id.split("/")[-1]
         if s.isdigit():
             cs = int(s)
             break
-        await app.send_message(message.chat.id, "Invalid link. Please send again ...")
+        await app.send_message(user_id, "❌ Invalid link. Try again.")
     else:
-        await app.send_message(message.chat.id, "Maximum attempts exceeded. Try later.")
+        await app.send_message(user_id, "❌ Max attempts reached. Try later.")
         return
 
-    # Number of messages input
-    for attempt in range(3):
-        num_messages = await app.ask(message.chat.id, f"How many messages do you want to Download?\n> Max limit {max_batch_size}")
+    # Ask for number of messages
+    for _ in range(3):
+        num_messages = await app.ask(user_id, f"How many messages do you want to process?\n> Max limit: {max_batch_size}")
         try:
             cl = int(num_messages.text.strip())
             if 1 <= cl <= max_batch_size:
                 break
             raise ValueError()
         except ValueError:
-            await app.send_message(
-                message.chat.id, 
-                f"Invalid number. Please enter a number between 1 and {max_batch_size}."
-            )
+            await app.send_message(user_id, f"❌ Enter a number between 1 and {max_batch_size}.")
     else:
-        await app.send_message(message.chat.id, "Maximum attempts exceeded. Try later.")
+        await app.send_message(user_id, "❌ Max attempts exceeded.")
         return
 
     # Ask for jump step
-    for attempt in range(3):
-        jump_input = await app.ask(message.chat.id, ">How Many Messages Do You want to jump\n> It means if link difference Between 1st link 2nd lik like that\n> if no difference then enter 0")
+    for _ in range(3):
+        jump_input = await app.ask(user_id, ">How many messages to jump each time?\n> (1 = every message, 2 = every 2nd, etc.)\n\n> 1 for default")
         try:
             jump_step = int(jump_input.text.strip())
             if jump_step >= 1:
                 break
             raise ValueError()
         except ValueError:
-            await app.send_message(message.chat.id, "Invalid jump value. Please enter a number >= 1.")
+            await app.send_message(user_id, "❌ Invalid jump value. Enter a number >= 1.")
     else:
-        await app.send_message(message.chat.id, "Maximum attempts exceeded. Try later.")
+        await app.send_message(user_id, "❌ Max attempts exceeded.")
         return
 
-    # Validate and interval check
-    can_proceed, response_message = await check_interval(user_id, freecheck)
+    # Check cooldown/interval
+    can_proceed, msg = await check_interval(user_id, freecheck)
     if not can_proceed:
-        await message.reply(response_message)
+        await message.reply(msg)
         return
-        
-    join_button = InlineKeyboardButton("Join Channel", url="https://t.me/skillwithchiru")
-    keyboard = InlineKeyboardMarkup([[join_button]])
+
+    # Start batch UI
+    join_btn = InlineKeyboardButton("Join Channel", url="https://t.me/skillwithchiru")
+    keyboard = InlineKeyboardMarkup([[join_btn]])
     pin_msg = await app.send_message(
         user_id,
         f"Batch process started ⚡\nProcessing: 0/{cl}\n\n**__Powered by 🅱🅴🅰🆂🆃__**",
@@ -252,62 +247,58 @@ async def batch_link(_, message):
     await pin_msg.pin(both_sides=True)
 
     users_loop[user_id] = True
+    userbot = await initialize_userbot(user_id)
+
     try:
-        normal_links_handled = False
-        userbot = await initialize_userbot(user_id)
+        for idx in range(cl):  # how many messages to process
+            if user_id not in users_loop or not users_loop[user_id]:
+                break
 
-        # Handle normal links first
-        for idx, i in enumerate(range(cs, cs + cl * jump_step, jump_step), start=1):
-            if user_id in users_loop and users_loop[user_id]:
-                url = f"{'/'.join(start_id.split('/')[:-1])}/{i}"
-                link = get_link(url)
+            current_msg = cs + idx * jump_step
+            url = f"{'/'.join(start_id.split('/')[:-1])}/{current_msg}"
+            link = get_link(url)
+
+            try:
+                msg = await app.send_message(user_id, f"Processing message {current_msg}...")
+
+                # Normal public t.me/ links
                 if 't.me/' in link and not any(x in link for x in ['t.me/b/', 't.me/c/', 'tg://openmessage']):
-                    msg = await app.send_message(message.chat.id, f"Processing...")
-                    await process_and_upload_link(userbot, user_id, msg.id, link, 0, message)
-                    await pin_msg.edit_text(
-                        f"Batch process started ⚡\nProcessing: {idx}/{cl}\n\n**__Powered by 🅱🅴🅰🆂🆃__**",
-                        reply_markup=keyboard
-                    )
-                    normal_links_handled = True
+                    await process_and_upload_link(None, user_id, msg.id, link, 0, message)
 
-        if normal_links_handled:
-            await set_interval(user_id, interval_minutes=300)
-            await pin_msg.edit_text(
-                f"Batch completed successfully for {cl} messages 🎉\n\n**__Powered by 🅱🅴🅰🆂🆃__**",
-                reply_markup=keyboard
-            )
-            await app.send_message(message.chat.id, "Batch completed successfully! 🎉")
-            return
-
-        # Handle special links with userbot
-        for idx, i in enumerate(range(cs, cs + cl * jump_step, jump_step), start=1):
-            if not userbot:
-                await app.send_message(message.chat.id, "Login in bot first ...")
-                users_loop[user_id] = False
-                return
-            if user_id in users_loop and users_loop[user_id]:
-                url = f"{'/'.join(start_id.split('/')[:-1])}/{i}"
-                link = get_link(url)
-                if any(x in link for x in ['t.me/b/', 't.me/c/']):
-                    msg = await app.send_message(message.chat.id, f"Processing...")
+                # Private/channel t.me/c/ links
+                elif any(x in link for x in ['t.me/b/', 't.me/c/']):
+                    if not userbot:
+                        await app.send_message(user_id, "❌ Please login to userbot first.")
+                        users_loop[user_id] = False
+                        return
                     await process_and_upload_link(userbot, user_id, msg.id, link, 0, message)
-                    await pin_msg.edit_text(
-                        f"Batch process started ⚡\nProcessing: {idx}/{cl}\n\n**__Powered by 🅱🅴🅰🆂🆃__**",
-                        reply_markup=keyboard
-                    )
+
+                else:
+                    await app.send_message(user_id, f"⚠️ Invalid link format: {link}")
+                    continue
+
+                await pin_msg.edit_text(
+                    f"Batch process started ⚡\nProcessing: {idx + 1}/{cl}\n\n**__Powered by 🅱🅴🅰🆂🆃__**",
+                    reply_markup=keyboard
+                )
+                await asyncio.sleep(1)
+
+            except Exception as e:
+                await app.send_message(user_id, f"⛔ Skipping failed message {current_msg}:\n{e}")
+                continue
 
         await set_interval(user_id, interval_minutes=300)
         await pin_msg.edit_text(
-            f"Batch completed successfully for {cl} messages 🎉\n\n**__Powered by 🅱🅴🅰🆂🆃__**",
+            f"✅ Batch completed: {cl} messages\n\n**__Powered by 🅱🅴🅰🆂🆃__**",
             reply_markup=keyboard
         )
-        await app.send_message(message.chat.id, "Batch completed successfully! 🎉")
+        await app.send_message(user_id, "🎉 Batch completed successfully!")
 
     except Exception as e:
-        await app.send_message(message.chat.id, f"Error: {e}")
+        await app.send_message(user_id, f"❌ Error: {e}")
     finally:
         users_loop.pop(user_id, None)
-
+        
 @app.on_message(filters.command("cancel"))
 async def stop_batch(_, message):
     user_id = message.chat.id
